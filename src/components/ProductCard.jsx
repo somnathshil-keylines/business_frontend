@@ -4,7 +4,8 @@ import api from "../api/axios.js";
 function ProductCard({ productId, productName, description, price, image }) {
          
                    const [isAddedWishlist, setIsAddedWishlist] = useState(false);
-                  //  const [Wishlists,  setWishlists] = useState([]);
+                   const [isAddedCart, setIsAddedCart] = useState(false);
+                  const [quantity, setQuantity] = useState(1);
   
               const addToWishlist = async () => {
                 try {
@@ -45,8 +46,61 @@ function ProductCard({ productId, productName, description, price, image }) {
          }, [productId]);
 
 
+         const addToCart = async () => {
+           try {
+             await api.post("/cart-add", {
+               product_id: productId,
+               quantity: quantity,
+             });
+             setIsAddedCart(true);
+
+             alert("Item has been added to cart !!");
+           } catch (error) {
+             console.error(error);
+             alert("Failed to add to cart");
+           }
+         };
+
+         const removeFromCart = async () => {
+           try {
+             await api.post("/cart/delete", {
+               product_id: productId,
+             });
+             setIsAddedCart(false);
+
+             alert("Item has been removed from cart !!");
+           } catch (error) {
+             console.error(error);
+             alert("Failed to remove from cart");
+           }
+         };
+
+          useEffect(() => {
+           const fetchCartList = async () => {
+             const res = await api.get("/cart");
+             const ids = res.data.carts.map((c) => c.product_id);
+             setIsAddedCart(ids.includes(productId));
+               res.data.carts.map((c)=>{
+                 if(c.product_id == productId){
+                   setQuantity(c.quantity);
+                 }
+               });
+           };
+
+           fetchCartList();
+         }, [productId]);
+
+         const increaseQty = () => {
+           setQuantity((q) => q + 1);
+         };
+
+         const decreaseQty = () => {
+           setQuantity((q) => (q > 1 ? q - 1 : 1));
+         };
+
+
   return (
-    <div className="w-65 bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
+    <div className="w-70 bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
       {/* Product Image */}
       <img
         src={
@@ -79,11 +133,52 @@ function ProductCard({ productId, productName, description, price, image }) {
         </div>
         {/* Price & Button */}
         <div className="flex items-center justify-between mt-4">
-          <span className="text-lg font-bold text-blue-600">₹{price}</span>
 
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm transition">
-            Add to Cart
-          </button>
+          {/* Bottom Section */}
+          <div className="mt-4">
+            {/* Price + Quantity */}
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-lg font-bold text-blue-600 p-4">
+                ₹{price}
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={decreaseQty}
+                  className="w-8 h-8 flex items-center justify-center border rounded-md text-lg font-semibold hover:bg-gray-100"
+                >
+                  −
+                </button>
+
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) =>
+                    setQuantity(Math.max(1, Number(e.target.value)))
+                  }
+                  className="w-12 text-center border rounded-md py-1 focus:outline-none"
+                />
+
+                <button
+                  onClick={increaseQty}
+                  className="w-8 h-8 flex items-center justify-center border rounded-md text-lg font-semibold hover:bg-gray-100"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Add to Cart */}
+            <button
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md text-sm font-semibold transition"
+              onClick={isAddedCart ? removeFromCart : addToCart}
+              
+            >
+              {isAddedCart ? 
+              "Remove from Cart" : "Add to Cart"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
