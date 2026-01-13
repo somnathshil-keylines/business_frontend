@@ -7,8 +7,12 @@ import FullPageLoader from "../components/FullPageLoader";
 import Error from "../components/Error";
 import api from "../api/axios.js";
 import CartItem from "../components/CartItem.jsx";
+import { useApp } from "../context/AppContext";
+
 
 function Cart() {
+  const { cart, wishlist, user } = useApp();
+
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,10 +21,10 @@ function Cart() {
       try {
         setError(false);
         setLoading(true);
-        const response = await api.get("/cart");
-        console.log(response.data.carts);
+        // const response = cart;
+        console.log(cart);
         setTimeout(() => {
-          setProducts(response.data.carts);
+          setProducts(cart);
           setLoading(false);
         }, 500);
       } catch (error) {

@@ -5,8 +5,12 @@ import ProductCard from "../components/ProductCard";
 import api from "../api/axios";
 import FullPageLoader from "../components/FullPageLoader";
 import Error from "../components/Error";
+import { useApp } from "../context/AppContext";
+
 
 function Wishlist() {
+  const { cart, wishlist, user } = useApp();
+
   const [wishlists, setWishlists]  = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -16,10 +20,10 @@ function Wishlist() {
         try {
             setError(false);
             setLoading(true);
-          const response = await api.get("/wishlist");
-          console.log(response.data.data.wishlists);
+          // const response = wishlist;
+          console.log(wishlist);
           setTimeout(() => {
-            setWishlists(response.data.data.wishlists);
+            setWishlists(wishlist);
             setLoading(false);
           }, 500);
         } catch (error) {

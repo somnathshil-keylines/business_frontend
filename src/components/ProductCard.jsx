@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axios.js";
+import { useApp } from "../context/AppContext";
 
 function ProductCard({ productId, productName, description, price, image }) {
          
+                   const { cart, wishlist, user } = useApp();
+
                    const [isAddedWishlist, setIsAddedWishlist] = useState(false);
                    const [isAddedCart, setIsAddedCart] = useState(false);
                   const [quantity, setQuantity] = useState(1);
@@ -37,8 +40,9 @@ function ProductCard({ productId, productName, description, price, image }) {
 
          useEffect(() => {
            const fetchWishlist = async () => {
-             const res = await api.get("/wishlist");
-             const ids = res.data.data.wishlists.map((w) => w.product_id);
+             //  const res = await api.get("/wishlist");
+              // const res = wishlist;
+             const ids = wishlist.map((w) => w.product_id);
              setIsAddedWishlist(ids.includes(productId));
            };
 
@@ -75,20 +79,13 @@ function ProductCard({ productId, productName, description, price, image }) {
            }
          };
 
-          useEffect(() => {
-           const fetchCartList = async () => {
-             const res = await api.get("/cart");
-             const ids = res.data.carts.map((c) => c.product_id);
-             setIsAddedCart(ids.includes(productId));
-               res.data.carts.map((c)=>{
-                 if(c.product_id == productId){
-                   setQuantity(c.quantity);
-                 }
-               });
-           };
+        useEffect(() => {
+          const ids = cart.map((c) => c.product_id);
+          setIsAddedCart(ids.includes(productId));
 
-           fetchCartList();
-         }, [productId]);
+          const item = cart.find((c) => c.product_id === productId);
+          if (item) setQuantity(item.quantity);
+        }, [cart, productId]);
 
          const increaseQty = () => {
            setQuantity((q) => q + 1);

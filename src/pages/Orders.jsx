@@ -4,8 +4,12 @@ import Footer from "../components/Footer";
 import api from "../api/axios";
 import FullPageLoader from "../components/FullPageLoader";
 import Error from "../components/Error";
+import { useApp } from "../context/AppContext";
+
 
 function Orders() {
+  const { cart, wishlist, user, ord } = useApp();
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -18,9 +22,11 @@ function Orders() {
         setError(false);
 
         const res = await api.get("/orders");
-
-        setOrders(res.data.data.orders);
-        setOrderItems(res.data.data.order_items);
+           console.log(res.data.orders);
+        // setOrders(res.data.orders);
+        // setOrderItems(res.data.order_items);
+        setOrders(res.data.orders || []);
+        setOrderItems(res.data.order_items || []);
       } catch (err) {
         setError(true);
       } finally {

@@ -2,29 +2,36 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios.js";
 import Error from "../components/Error";
+import { useApp } from "../context/AppContext";
+
 
 function UserSidebar({ isOpen, onClose }) {
-  if (!isOpen) return null;
+  const { cart, wishlist, user, order } = useApp();
+
   const [error, setError] = useState(false);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPhone, setUserPhone] = useState('');
 
+  const [orderCount, setOrderCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
+
   useEffect(() => {
-    (async() => {
-         try {
-            setError(false);
-              const response = await api.get("/user");
-              console.log(response.data.user.name);
-              setUserName(response.data.user.name);
-              setUserEmail(response.data.user.email);
-              setUserPhone(response.data.user.phone);
-         } catch (error) {
-            setError(true);
-         }
-           
-    })()
-  }, []);
+    if (!user) return; // ✅ guard
+
+    setUserName(user.name);
+    setUserEmail(user.email);
+    setUserPhone(user.phone);
+
+    setWishlistCount(wishlist.length);
+    setCartCount(cart.length);
+    setOrderCount(order.length);
+  }, [user]);
+
+      if (!isOpen) return null;
+      if (error) return <Error />;
+  
 
           if (error) {
             return (
@@ -36,76 +43,6 @@ function UserSidebar({ isOpen, onClose }) {
     
 
   return (
-    // <>
-    //   {/* Overlay */}
-    //   <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-
-    //   {/* Sidebar */}
-    //   <div className="fixed top-0 right-0 w-72 h-full bg-white z-50 shadow-lg p-6">
-    //     <div className="flex items-center justify-between mb-6">
-    //       <h2 className="text-lg font-semibold">{userName}</h2>
-    //       <p className="text-lg font-semibold">{userEmail}</p>
-    //       <h2 className="text-lg font-semibold">User Menu</h2>
-    //       <button onClick={onClose} className="text-xl">
-    //         ✕
-    //       </button>
-    //     </div>
-
-    //     <ul className="space-y-4 text-sm">
-    //       <li>
-    //         <Link
-    //           to="/orders"
-    //           onClick={onClose}
-    //           className="block hover:text-blue-500"
-    //         >
-    //           My Orders
-    //         </Link>
-    //       </li>
-
-    //       <li>
-    //         <Link
-    //           to="/wishlist"
-    //           onClick={onClose}
-    //           className="block hover:text-blue-500"
-    //         >
-    //           Wishlist
-    //         </Link>
-    //       </li>
-
-    //       <li>
-    //         <Link
-    //           to="/cart"
-    //           onClick={onClose}
-    //           className="block hover:text-blue-500"
-    //         >
-    //           Cart
-    //         </Link>
-    //       </li>
-
-    //       <li>
-    //         <Link
-    //           to="/profile"
-    //           onClick={onClose}
-    //           className="block hover:text-blue-500"
-    //         >
-    //           Profile
-    //         </Link>
-    //       </li>
-
-    //       <li className="pt-4 border-t">
-    //         <button
-    //           onClick={() => {
-    //             localStorage.removeItem("token");
-    //             window.location.href = "/login";
-    //           }}
-    //           className="text-red-500 hover:text-red-600"
-    //         >
-    //           Logout
-    //         </button>
-    //       </li>
-    //     </ul>
-    //   </div>
-    // </>
     <>
       {/* Overlay */}
       <div
@@ -148,7 +85,11 @@ function UserSidebar({ isOpen, onClose }) {
               onClick={onClose}
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition"
             >
-              📦 <span>My Orders</span>
+              <i className="fa-solid fa-truck fa-solid  fa-2x"></i>
+              <span className="text-lg">My Orders</span>
+              <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                {orderCount ? orderCount : 0}
+              </span>
             </Link>
           </li>
 
@@ -158,7 +99,11 @@ function UserSidebar({ isOpen, onClose }) {
               onClick={onClose}
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition"
             >
-              ❤️ <span>Wishlist</span>
+              <i className="fa-solid fa-heart fa-solid  fa-2x"></i>
+              <span className="text-lg">Wishlist</span>
+              <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                {wishlistCount ? wishlistCount : 0}
+              </span>
             </Link>
           </li>
 
@@ -168,7 +113,11 @@ function UserSidebar({ isOpen, onClose }) {
               onClick={onClose}
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition"
             >
-              🛒 <span>Cart</span>
+              <i className="fa-solid fa-cart-arrow-down fa-solid  fa-2x"></i>
+              <span className="text-lg">Cart</span>
+              <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                {cartCount ? cartCount : 0}
+              </span>
             </Link>
           </li>
 
@@ -178,7 +127,8 @@ function UserSidebar({ isOpen, onClose }) {
               onClick={onClose}
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition"
             >
-              👤 <span>Profile</span>
+              <i className="fa-solid fa-user fa-solid  fa-2x"></i>
+              <span className="text-lg">Profile</span>
             </Link>
           </li>
         </ul>
