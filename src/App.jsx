@@ -19,6 +19,10 @@ import ProductDetails from './pages/ProductDetails'
 import SellerAddProduct from './pages/SellerAddProduct'
 import Wishlist from './pages/Wishlist'
 import Cart from './pages/Cart'
+import CheckoutLayout from './layouts/CheckoutLayout';
+import CheckoutAddress from './pages/CheckoutAddress';
+import CheckoutPayment from './pages/CheckoutPayment';
+import Profile from "./pages/Profile";
 
 function App() {
   const [count, setCount] = useState(0)
@@ -32,7 +36,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-
         {/* PROTECTED ROUTES */}
         <Route
           path="/cart"
@@ -42,7 +45,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/wishlist"
           element={
@@ -51,7 +53,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/orders"
           element={
@@ -60,12 +61,33 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/seller/add-product"
           element={
             <PrivateRoute>
               <SellerAddProduct />
+            </PrivateRoute>
+          }
+        />
+        {/*  CHECKOUT (ONLY HERE CheckoutProvider is active) */}
+        <Route
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <CheckoutLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="address" element={<CheckoutAddress />} />
+          <Route path="payment" element={<CheckoutPayment />} />
+        </Route>
+
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

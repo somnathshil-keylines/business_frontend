@@ -37,6 +37,16 @@ export const AppProvider = ({ children }) => {
     loadInitialData();
   }, []);
 
+  const refreshWishlist = async () => {
+    const res = await api.get("/wishlist");
+    setWishlist(res.data.wishlists || []);
+  };
+
+    const refreshOrderList = async () => {
+      const res = await api.get("/orders");
+      setOrder(res.data.orders || []);
+    };
+
   return (
     <AppContext.Provider
       value={{
@@ -48,6 +58,8 @@ export const AppProvider = ({ children }) => {
         order,
         products,
         loading,
+        refreshWishlist,
+        refreshOrderList,
       }}
     >
       {children}

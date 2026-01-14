@@ -15,7 +15,7 @@ function UserSidebar({ isOpen, onClose }) {
 
   const [orderCount, setOrderCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(wishlist.length);
 
   useEffect(() => {
     if (!user) return; // ✅ guard
@@ -24,10 +24,16 @@ function UserSidebar({ isOpen, onClose }) {
     setUserEmail(user.email);
     setUserPhone(user.phone);
 
-    setWishlistCount(wishlist.length);
+ 
     setCartCount(cart.length);
-    setOrderCount(order.length);
   }, [user]);
+
+  useEffect(() => {
+       setWishlistCount(wishlist.length);
+  }, [wishlist]);
+  useEffect(() => {
+          setOrderCount(order.length);
+  }, [order]);
 
       if (!isOpen) return null;
       if (error) return <Error />;

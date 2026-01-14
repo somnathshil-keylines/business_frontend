@@ -4,7 +4,7 @@ import { useApp } from "../context/AppContext";
 
 function ProductCard({ productId, productName, description, price, image }) {
          
-                   const { cart, wishlist, user } = useApp();
+                   const { cart, wishlist, refreshWishlist, user } = useApp();
 
                    const [isAddedWishlist, setIsAddedWishlist] = useState(false);
                    const [isAddedCart, setIsAddedCart] = useState(false);
@@ -16,7 +16,7 @@ function ProductCard({ productId, productName, description, price, image }) {
                     product_id: productId,
                   });
                   setIsAddedWishlist(true);
-
+                  refreshWishlist();
                   alert("Item has been added to wishlist !!");
                 } catch (error) {
                   console.error(error);
@@ -30,7 +30,7 @@ function ProductCard({ productId, productName, description, price, image }) {
                     product_id: productId,
                   });
                   setIsAddedWishlist(false);
-
+                    refreshWishlist();
                   alert("Item has been removed from wishlist !!");
                 } catch (error) {
                   console.error(error);

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
@@ -11,6 +12,7 @@ import { useApp } from "../context/AppContext";
 
 
 function Cart() {
+  const navigate = useNavigate();
   const { cart, wishlist, user } = useApp();
 
   const [products, setProducts] = useState([]);
@@ -103,7 +105,10 @@ function Cart() {
             </span>
           </div>
 
-          <button className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+          <button
+            onClick={() => navigate("/checkout/address")}
+            className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+          >
             Order Now
           </button>
         </div>

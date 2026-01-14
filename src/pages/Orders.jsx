@@ -64,7 +64,7 @@ function Orders() {
                 {/* Order Header */}
                 <div className="flex flex-wrap justify-between gap-4 mb-4">
                   <div>
-                    <h2 className="font-semibold">Order #{order.id}</h2>
+                    <h2 className="font-semibold">Order Id #{order.id}</h2>
                     <p className="text-sm text-gray-500">
                       {new Date(order.created_at).toLocaleDateString()}
                     </p>
