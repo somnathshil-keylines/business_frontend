@@ -8,22 +8,25 @@ export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [order, setOrder] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [userRes, cartRes, wishlistRes, orderRes] = await Promise.all([
+        const [userRes, cartRes, wishlistRes, orderRes, productRes] = await Promise.all([
           api.get("/user"),
           api.get("/cart"),
           api.get("/wishlist"),
           api.get("/orders"),
+          api.get("/products"),
         ]);
 
         setUser(userRes.data.user);
         setCart(cartRes.data.carts || []);
         setWishlist(wishlistRes.data.wishlists || []);
         setOrder(orderRes.data.orders || []);
+        setProducts(productRes.data.products || []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -36,7 +39,16 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ user, cart, wishlist, setCart, setWishlist, order, loading }}
+      value={{
+        user,
+        cart,
+        wishlist,
+        setCart,
+        setWishlist,
+        order,
+        products,
+        loading,
+      }}
     >
       {children}
     </AppContext.Provider>

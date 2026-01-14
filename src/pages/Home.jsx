@@ -6,47 +6,29 @@ import ProductCard from '../components/ProductCard'
 import FullPageLoader from '../components/FullPageLoader';
 import Error from '../components/Error';
 import HeroSection from '../components/HeroSection';
+import { useApp } from "../context/AppContext";
 
 function Home() {
-        const [products, setProducts] = useState([]);
-        const [error, setError] = useState(false);
-        const [loading, setLoading] = useState(false);
-        useEffect(() => {
-          (async() => {
+        const { cart, wishlist, user, products } = useApp();  
+        // const [products, setProducts] = useState([]);
+        // const [error, setError] = useState(false);
+        // const [loading, setLoading] = useState(false);
 
-              try {
-                  setError(false);
-                  setLoading(true);
-                    const response = await axios.get(
-                      "http://localhost/business/public/api/v1/products"
-                    );
-                    console.log(response.data.products);
-                    setTimeout(()=>{
-                        setProducts(response.data.products);
-                        setLoading(false);
-                    }, 500);
-              } catch (error) {
-                setError(true);
-                setLoading(false);
-              }
-          })()
-        }, []);
+        // if(loading){
+        //   return ( 
+        //     <>
+        //      <FullPageLoader />
+        //     </>
+        //   )
+        // }
 
-        if(loading){
-          return ( 
-            <>
-             <FullPageLoader />
-            </>
-          )
-        }
-
-        if (error) {
-          return (
-            <>
-              <Error />
-            </>
-          )
-        }
+        // if (error) {
+        //   return (
+        //     <>
+        //       <Error />
+        //     </>
+        //   )
+        // }
         
         
   return (
