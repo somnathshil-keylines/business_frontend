@@ -44,6 +44,10 @@ function CheckoutPayment() {
         shipping_charge: 100,
         discount_amount: 0,
       });
+      
+      await api.post("/cart/delete-all", {
+        product_ids: cart.map((item) => item.product_id),
+      });
       refreshOrderList();
       // Clear everything
       setCart([]);
